@@ -1,5 +1,6 @@
 package com.atguigu.gmall.manage.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall.bean.PmsBaseAttrInfo;
 import com.atguigu.gmall.manage.mapper.PmsBaseAttrMapper;
 import com.atguigu.gmall.service.PmsBaseAttrService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+@Service
 public class PmsBaseAttrServiceImpl implements PmsBaseAttrService {
 
     @Autowired
