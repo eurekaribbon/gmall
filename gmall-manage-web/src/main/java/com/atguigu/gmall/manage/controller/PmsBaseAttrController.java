@@ -27,8 +27,7 @@ public class PmsBaseAttrController {
     @RequestMapping("saveAttrInfo")
     @ResponseBody
     public String saveAttrInfo(@RequestBody PmsBaseAttrInfo pmsBaseAttrInfo){
-
-
+        pmsBaseAttrService.saveAttrInfo(pmsBaseAttrInfo);
         return "success";
     }
 }
