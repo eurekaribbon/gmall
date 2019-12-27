@@ -5,6 +5,7 @@ import com.atguigu.gmall.bean.PmsBaseAttrInfo;
 import com.atguigu.gmall.service.PmsBaseAttrService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,5 +22,13 @@ public class PmsBaseAttrController {
     @ResponseBody
     public List<PmsBaseAttrInfo> getAttrInfoList(String catalog3Id){
         return pmsBaseAttrService.getAttrInfoList(catalog3Id);
+    }
+
+    @RequestMapping("saveAttrInfo")
+    @ResponseBody
+    public String saveAttrInfo(@RequestBody PmsBaseAttrInfo pmsBaseAttrInfo){
+
+
+        return "success";
     }
 }
