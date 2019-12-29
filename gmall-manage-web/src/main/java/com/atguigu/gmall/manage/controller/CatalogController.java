@@ -38,12 +38,14 @@ public class CatalogController {
 
 
     @RequestMapping("getCatalog2")
+    @ResponseBody
     public List<PmsBaseCatalog2> getCatalog2(String catalog1Id){
         List<PmsBaseCatalog2> pmsBaseCatalog2s =  catalogService.getCatalog2(catalog1Id);
         return pmsBaseCatalog2s;
     }
 
     @RequestMapping("getCatalog3")
+    @ResponseBody
     public List<PmsBaseCatalog3> getCatalog3(String catalog2Id){
         List<PmsBaseCatalog3> pmsBaseCatalog3s =  catalogService.getCatalog3(catalog2Id);
         return pmsBaseCatalog3s;
