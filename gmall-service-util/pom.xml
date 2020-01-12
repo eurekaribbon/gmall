@@ -38,7 +38,7 @@
             <scope>runtime</scope>
         </dependency>
 
-
+        <!--引入redis客户端-->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>

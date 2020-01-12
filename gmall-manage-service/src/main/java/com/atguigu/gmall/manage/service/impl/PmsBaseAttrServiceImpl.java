@@ -70,5 +70,11 @@ public class PmsBaseAttrServiceImpl implements PmsBaseAttrService {
         return saleAttrs;
     }
 
+    @Override
+    public List<PmsProductSaleAttr> spuSaleAttrListCheckBySku(String spuId, String id) {
+        List<PmsProductSaleAttr> PmsProductSaleAttrs =  pmsProductSaleAttrMapper.selectSpuSaleAttrListCheckBySku(spuId,id);
+        return PmsProductSaleAttrs;
+    }
+
 
 }

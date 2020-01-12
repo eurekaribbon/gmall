@@ -15,4 +15,6 @@ public interface PmsBaseAttrService {
 
 
     List<PmsProductSaleAttr> spuSaleAttrList(String spuId);
+
+    List<PmsProductSaleAttr> spuSaleAttrListCheckBySku(String spuId, String id);
 }
