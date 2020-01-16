@@ -25,4 +25,6 @@ public interface SkuService {
      * @return
      */
     List<PmsSkuInfo> getSkuInfoBySpuId(String spuId);
+
+    List<PmsSkuInfo> getAllSku();
 }
