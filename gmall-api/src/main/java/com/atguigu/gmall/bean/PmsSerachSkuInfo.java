@@ -1,6 +1,7 @@
 package com.atguigu.gmall.bean;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * @author lvlei
  * create on 2020-01-15-23:35
  */
-public class PmsSerachSkuInfo {
+public class PmsSerachSkuInfo implements Serializable {
 
     @Id
     private String id;

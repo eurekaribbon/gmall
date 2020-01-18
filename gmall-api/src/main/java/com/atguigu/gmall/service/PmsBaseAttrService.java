@@ -5,6 +5,7 @@ import com.atguigu.gmall.bean.PmsBaseSaleAttr;
 import com.atguigu.gmall.bean.PmsProductSaleAttr;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PmsBaseAttrService {
     List<PmsBaseAttrInfo> getAttrInfoList(String catalog3Id);
@@ -17,4 +18,6 @@ public interface PmsBaseAttrService {
     List<PmsProductSaleAttr> spuSaleAttrList(String spuId);
 
     List<PmsProductSaleAttr> spuSaleAttrListCheckBySku(String spuId, String id);
+
+    List<PmsBaseAttrInfo> listByValuId(Set<String> set);
 }

@@ -4,9 +4,11 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall.bean.*;
 import com.atguigu.gmall.manage.mapper.*;
 import com.atguigu.gmall.service.PmsBaseAttrService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PmsBaseAttrServiceImpl implements PmsBaseAttrService {
@@ -74,6 +76,15 @@ public class PmsBaseAttrServiceImpl implements PmsBaseAttrService {
     public List<PmsProductSaleAttr> spuSaleAttrListCheckBySku(String spuId, String id) {
         List<PmsProductSaleAttr> PmsProductSaleAttrs =  pmsProductSaleAttrMapper.selectSpuSaleAttrListCheckBySku(spuId,id);
         return PmsProductSaleAttrs;
+    }
+
+    @Override
+    public List<PmsBaseAttrInfo> listByValuId(Set<String> set) {
+
+        String valueIdStr = StringUtils.join(set, ",");
+
+        List<PmsBaseAttrInfo> pmsBaseAttrInfos = pmsBaseAttrMapper.selectAttrList(valueIdStr);
+        return pmsBaseAttrInfos;
     }
 
 

@@ -71,7 +71,8 @@
         </div>
         <i><img src="/list/image/right-@1x.png" alt=""></i>
         <span th:if="${keyword}!=null" th:text="'&quot;'+${keyword}+'&quot;'">&quot;小米&quot;</span>
-        <a class="select-attr"   th:each="baseAttrValueSelected:${attrValueSelectedList}"    th:href="'list.html?'+${baseAttrValueSelected.urlParam}"   th:utext=" ${baseAttrValueSelected.valueName} +'<b> ✖ </b>'"  > 2G<b> ✖ </b>
+        <a class="select-attr"   th:each="baseAttrValueSelected:${attrValueSelectedList}"    th:href="'list.html?'+${baseAttrValueSelected.urlParam}"   th:utext=" ${baseAttrValueSelected.valueName} +'<b> ✖ </b>'">
+            <b> ✖ </b>
         </a>
         <!-- <a class="select-attr"   href="#"      > 屏幕尺寸:5.1-5.5英寸<b> ✖ </b>
         </a>-->
@@ -401,7 +402,7 @@
 <script language="JavaScript">
     function item(skuid) {
         console.log("skuid:"+skuid);
-        window.location.href="http://item.gmall.com:8084/"+skuid+".html";
+        window.location.href="http://item.gmall.com:8082/"+skuid+".html";
     }
 
     function searchList(){
@@ -455,7 +456,7 @@
         $(this).css({display:"none"})
     });
     //显示隐藏
-    var $li = $(".GM_nav_logo>div:gt(3)").hide();
+    var $li = $(".GM_nav_logo>div:gt(3)").show();
       $('.GM_show span').click(function(){
           if($li.is(':hidden')){
               $li.show();

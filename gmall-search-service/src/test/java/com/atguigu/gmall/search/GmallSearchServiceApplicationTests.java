@@ -7,7 +7,13 @@ import com.atguigu.gmall.bean.PmsSkuInfo;
 import com.atguigu.gmall.service.SkuService;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Index;
+import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
 import org.apache.commons.beanutils.BeanUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +35,71 @@ public class GmallSearchServiceApplicationTests {
     JestClient jestClient;
 
 
+    @Test
+    public void search() throws IOException {
 
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            //bool
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+                        //term
+        TermQueryBuilder termQueryBuilder = new TermQueryBuilder("skuAttrValueList.attrId", "25");
+                //filter
+        boolQueryBuilder.filter(termQueryBuilder);
+                        //match
+        MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("skuName", "华为");
+                //must
+        boolQueryBuilder.must(matchQueryBuilder);
+
+        //query
+        searchSourceBuilder.query(boolQueryBuilder);
+
+        //from
+        searchSourceBuilder.from(0);
+        //size
+        searchSourceBuilder.size(20);
+        //highlight
+        searchSourceBuilder.highlight(null);
+
+        String s = searchSourceBuilder.toString();
+        System.out.println(s);
+
+        String json = "{\n" +
+                "  \"query\": {\n" +
+                "    \"bool\": {\n" +
+                "      \"filter\": [\n" +
+                "        {\n" +
+                "          \"term\": {\n" +
+                "                    \"skuAttrValueList.attrId\": \"25\"\n" +
+                "                  }\n" +
+                "        },\n" +
+                "        {\n" +
+                "          \"term\": {\n" +
+                "              \"skuAttrValueList.valueId\": \"39\"\n" +
+                "                  }\n" +
+                "          \n" +
+                "        }\n" +
+                "      ],\n" +
+                "      \"must\": [\n" +
+                "        {\n" +
+                "          \"match\": {\n" +
+                "            \"skuName\": \"华为\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex("gmallpms").addType("PmsSkuInfo").build();
+        SearchResult result = jestClient.execute(search);
+        List<SearchResult.Hit<PmsSerachSkuInfo, Void>> hits = result.getHits(PmsSerachSkuInfo.class);
+        for (SearchResult.Hit<PmsSerachSkuInfo, Void> hit : hits) {
+            PmsSerachSkuInfo pmsSerachSkuInfo = hit.source;
+
+        }
+    }
+
+
+//同步mysql库与elasticsearch库
     @Test
     public void contextLoads() throws InvocationTargetException, IllegalAccessException, IOException {
         //查询mysql
