@@ -65,7 +65,7 @@ public class CartController {
                     //购物车数据已存在
                     for (OmsCartItem cartItem : omsCartItems) {
                         if(cartItem.getProductSkuId().equals(omsCartItem.getProductSkuId())){
-                            cartItem.setQuantity(cartItem.getQuantity()+1);
+                            cartItem.setQuantity(cartItem.getQuantity()+omsCartItem.getQuantity());
                         }
                     }
                 }else{
