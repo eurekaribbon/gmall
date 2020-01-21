@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.bean.OmsCartItem;
 import com.atguigu.gmall.bean.PmsSkuInfo;
+import com.atguigu.gmall.service.CartService;
 import com.atguigu.gmall.service.SkuService;
 import com.atguigu.gmall.util.CookieUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,9 @@ public class CartController {
 
     @Reference
     SkuService skuService;
+
+    @Reference
+    CartService cartService;
 
     @RequestMapping("addToCart")
     public String addToCart(String skuId, Integer quantity, HttpServletRequest request, HttpServletResponse response){
@@ -49,6 +53,19 @@ public class CartController {
         //根据用户是否登录 走cookie db
         if(StringUtils.isNotBlank("")){
             //用户已经登陆
+            //查询用户购物车中是否存在该商品
+            OmsCartItem omsCartItemFromDb = cartService.checkIfExist(memberId,skuId);
+            if(omsCartItemFromDb!=null){
+                //购物车中存在此商品  更新商品信息
+                omsCartItemFromDb.setQuantity(omsCartItemFromDb.getQuantity()+omsCartItem.getQuantity());
+                cartService.updateCart(omsCartItemFromDb);
+            }else{
+                //购物车中不存在此商品  添加商品信息
+                cartService.addCart(omsCartItem);
+            }
+
+            //同步缓存
+            cartService.flushCartCache(memberId);
 
         }else{
             //用户未登录
