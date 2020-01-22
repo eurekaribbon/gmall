@@ -9,11 +9,13 @@ import com.atguigu.gmall.service.SkuService;
 import com.atguigu.gmall.util.CookieUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +43,31 @@ public class CartController {
         return "结算页面";
     }
 
+  @RequestMapping("cartList")
+    public String cartList(HttpServletRequest request, ModelMap map){
+        List<OmsCartItem> omsCartItems = new java.util.ArrayList<>();
+        String memberId = "1";
+
+        if(StringUtils.isBlank(memberId)){
+            //用户未登录 从cookie中查找
+            String cookieValue = CookieUtil.getCookieValue(request, "cartListDb", true);
+            if(StringUtils.isNotBlank(cookieValue)){
+                omsCartItems = JSONObject.parseArray(cookieValue, OmsCartItem.class);
+            }
+        }else{
+            //登录从缓存  缓存没有  查询数据库
+            omsCartItems = cartService.cartList(memberId);
+            }
+
+      for (OmsCartItem omsCartItem : omsCartItems) {
+          omsCartItem.setTotalPrice(""+new BigDecimal(omsCartItem.getQuantity()).multiply(omsCartItem.getPrice()));
+      }
+        map.put("cartList",omsCartItems);
+        return "cartList";
+  }
+
+
+
     @RequestMapping("addToCart")
     public String addToCart(String skuId, Integer quantity, HttpServletRequest request, HttpServletResponse response){
 
@@ -53,7 +80,7 @@ public class CartController {
         omsCartItem.setDeleteStatus(0);
         omsCartItem.setPrice(pmsSkuInfo.getPrice());
         omsCartItem.setProductCategoryId(pmsSkuInfo.getCatalog3Id());
-        omsCartItem.setProductId("");
+        omsCartItem.setProductId(pmsSkuInfo.getSpuId());
         omsCartItem.setProductPic(pmsSkuInfo.getSkuDefaultImg());
         omsCartItem.setQuantity((quantity));
         omsCartItem.setProductSkuId(skuId);
@@ -63,7 +90,7 @@ public class CartController {
         String memberId = "1";
 
         //根据用户是否登录 走cookie db
-        if(StringUtils.isNotBlank("")){
+        if(StringUtils.isNotBlank(memberId)){
             //用户已经登陆
             //查询用户购物车中是否存在该商品
             OmsCartItem omsCartItemFromDb = cartService.checkIfExist(memberId,skuId);
@@ -73,6 +100,7 @@ public class CartController {
                 cartService.updateCart(omsCartItemFromDb);
             }else{
                 //购物车中不存在此商品  添加商品信息
+                omsCartItem.setMemberId(memberId);
                 cartService.addCart(omsCartItem);
             }
 

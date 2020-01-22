@@ -1,6 +1,7 @@
 package com.atguigu.gmall.bean;
 
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,7 +13,7 @@ public class OmsCartItem implements Serializable{
     private String productId;
     private String productSkuId;
     private String memberId;
-    private int quantity;
+    private Integer quantity;
     private BigDecimal price;
     private String sp1;
     private String sp2;
@@ -29,6 +30,26 @@ public class OmsCartItem implements Serializable{
     private String productBrand;
     private String productSn;
     private String productAttr;
+    private String isChecked;
+
+    @Transient
+    private String totalPrice;
+
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getIsChecked() {
+        return isChecked;
+    }
+
+    public void setIsChecked(String isChecked) {
+        this.isChecked = isChecked;
+    }
 
     public String getId() {
         return id;
@@ -62,11 +83,11 @@ public class OmsCartItem implements Serializable{
         this.memberId = memberId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

@@ -1,12 +1,13 @@
 package com.atguigu.gmall.cart.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.bean.OmsCartItem;
 import com.atguigu.gmall.cart.mapper.OmsCartItemMapper;
 import com.atguigu.gmall.service.CartService;
 import com.atguigu.gmall.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import tk.mybatis.mapper.entity.Example;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class CartServiceImpl implements CartService {
 
     @Autowired
@@ -69,5 +71,19 @@ public class CartServiceImpl implements CartService {
         jedis.hmset(key,map);
         jedis.close();
 
+    }
+
+    @Override
+    public List<OmsCartItem> cartList(String memberId) {
+        Jedis jedis = redisUtil.getJedis();
+        List<OmsCartItem> omsCartItems = new java.util.ArrayList<>();
+        List<String> hvals = jedis.hvals("user:" + memberId + ":cart");
+        if(hvals!=null){
+            for (String hval : hvals) {
+                OmsCartItem omsCartItem = JSONObject.parseObject(hval, OmsCartItem.class);
+                omsCartItems.add(omsCartItem);
+            }
+        }
+        return omsCartItems;
     }
 }

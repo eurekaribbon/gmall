@@ -98,8 +98,8 @@ public class SkuServiceImpl implements SkuService {
             //防止缓存击穿  采用分布式锁
             String lockKey ="sku:"+skuId+":lock";
             String value = UUID.randomUUID().toString();
-            String ok = jedis.set(lockKey, value, "nx", "px", 10);
-            if(StringUtils.isNotBlank(ok)&&"ok".equals(ok)){
+            String ok = jedis.set(lockKey, value, "nx", "px", 1000);
+            if(StringUtils.isNotBlank(ok)&&"OK".equals(ok)){
                 //设置成功
                 pmsSkuInfo = getSkuInfoFromDb(skuId);
                 if(pmsSkuInfo!=null){
