@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PassPortController {
 
 
-    @RequestMapping("login")
+    @RequestMapping("index")
     public String login(){
         return "index";
     }
