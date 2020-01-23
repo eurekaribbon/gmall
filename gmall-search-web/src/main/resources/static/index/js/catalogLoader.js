@@ -1,11 +1,12 @@
 $(function(){
+    //ajax函数的缩写
     $.getJSON("/index/json/catalog.json",function (data) {
 
         var ctgall=data;
         $(".header_main_left_a").each(function(){
             var ctgnums= $(this).attr("ctg-data");
             if(ctgnums){
-                var panel=$("<div class='header_main_left_main'></div>");
+                var panel=$("<div class='header_main_left_main'></div>");//使用$直接转成jquery对象，方便后续操作
                 var panelol=$("<ol class='header_ol'></ol>");
                 var  ctgnumArray = ctgnums.split(",");
                 $.each(ctgnumArray,function (i,ctg1Id) {
