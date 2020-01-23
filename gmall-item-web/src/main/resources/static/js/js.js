@@ -71,6 +71,7 @@ $(function(){
 
        //红边框
 		$(".box-attr-2 dd").click(function() {
+			//查找兄弟元素 siblings
 			$(this).addClass("redborder").siblings("dd").removeClass("redborder");
             switchSkuId();
 		})

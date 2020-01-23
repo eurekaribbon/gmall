@@ -1028,7 +1028,7 @@
             var valueIds="";
             // 拼接成属性值串
             for (var i = 0; i < checkDivs.length; i++) {
-                var saleAttrValueDiv = checkDivs.eq(i);
+                var saleAttrValueDiv = checkDivs.eq(i);//减少匹配元素的集合为指定的索引的那一个元素
                 if(i>0){
                     valueIds= valueIds+"|";
                 }
