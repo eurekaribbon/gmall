@@ -70,7 +70,6 @@ public class CartController {
 
     @RequestMapping("addToCart")
     public String addToCart(String skuId, Integer quantity, HttpServletRequest request, HttpServletResponse response){
-
         //调用商品服务查询商品信息
         PmsSkuInfo pmsSkuInfo = skuService.getSkuInfoBySkuId(skuId);
 
