@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import tk.mybatis.mapper.entity.Example;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class CartServiceImpl implements CartService {
         Map<String,String> map = new HashMap<>();
         for (OmsCartItem cartItem : omsCartItems) {
             //计算总价格
-
+            cartItem.setTotalPrice(""+new BigDecimal(cartItem.getQuantity()).multiply(cartItem.getPrice()));
             map.put(cartItem.getProductSkuId(), JSON.toJSONString(cartItem));
         }
 
@@ -85,5 +86,16 @@ public class CartServiceImpl implements CartService {
             }
         }
         return omsCartItems;
+    }
+
+    @Override
+    public void checkCart(OmsCartItem omsCartItem) {
+        //更新购物车选中状态
+        Example example = new Example(OmsCartItem.class);
+        example.createCriteria().andEqualTo("memberId",omsCartItem.getMemberId()).andEqualTo("productSkuId",omsCartItem.getProductSkuId());
+        omsCartItemMapper.updateByExampleSelective(omsCartItem,example);
+
+        //更新缓存
+        flushCartCache(omsCartItem.getMemberId());
     }
 }

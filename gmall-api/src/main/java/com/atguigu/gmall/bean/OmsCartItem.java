@@ -35,6 +35,17 @@ public class OmsCartItem implements Serializable{
     @Transient
     private String totalPrice;
 
+    @Transient
+    private String totalAmount;
+
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     public String getTotalPrice() {
         return totalPrice;
     }

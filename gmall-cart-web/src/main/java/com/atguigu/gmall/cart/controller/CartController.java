@@ -43,7 +43,55 @@ public class CartController {
         return "结算页面";
     }
 
-  @RequestMapping("cartList")
+
+    /**
+     * 更新购物车状态
+     * @param request
+     * @param isChecked
+     * @param skuId
+     * @param map
+     * @return
+     */
+    @RequestMapping("checkCart")
+    public String checkCart(HttpServletRequest request,String isChecked,String skuId,ModelMap map){
+        List<OmsCartItem> omsCartItems = new java.util.ArrayList<>();
+
+        //修改数据库状态
+        String memberId = "1";
+        OmsCartItem omsCartItem = new OmsCartItem();
+        omsCartItem.setProductSkuId(skuId);
+        omsCartItem.setMemberId(memberId);
+
+        omsCartItem.setIsChecked(isChecked);
+        cartService.checkCart(omsCartItem);
+
+        omsCartItems = cartService.cartList(memberId);
+
+        BigDecimal bigDecimal = getTotalAount(omsCartItems);
+
+        map.put("totalAmount",bigDecimal);
+        map.put("cartList",omsCartItems);
+        return "cartListInner";
+    }
+
+    /**
+     * 计算商品的选中价格
+     * @param omsCartItems
+     * @return
+     */
+    private BigDecimal getTotalAount(List<OmsCartItem> omsCartItems) {
+        BigDecimal bigDecimal = new BigDecimal("0");
+        for (OmsCartItem cartItem : omsCartItems) {
+            //计算选中商品的总价格
+
+            if(cartItem.getIsChecked().equals("1")){
+                bigDecimal = bigDecimal.add(new BigDecimal(cartItem.getTotalPrice()));
+            }
+        }
+        return bigDecimal;
+    }
+
+    @RequestMapping("cartList")
     public String cartList(HttpServletRequest request, ModelMap map){
         List<OmsCartItem> omsCartItems = new java.util.ArrayList<>();
         String memberId = "1";
@@ -62,6 +110,8 @@ public class CartController {
       for (OmsCartItem omsCartItem : omsCartItems) {
           omsCartItem.setTotalPrice(""+new BigDecimal(omsCartItem.getQuantity()).multiply(omsCartItem.getPrice()));
       }
+        BigDecimal totalAount = getTotalAount(omsCartItems);
+        map.put("totalAmount",totalAount);
         map.put("cartList",omsCartItems);
         return "cartList";
   }
