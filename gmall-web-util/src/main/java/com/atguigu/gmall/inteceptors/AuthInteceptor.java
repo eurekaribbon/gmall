@@ -1,6 +1,9 @@
 package com.atguigu.gmall.inteceptors;
 
 import com.atguigu.gmall.anotations.LoginRequire;
+import com.atguigu.gmall.util.CookieUtil;
+import com.atguigu.gmall.util.HttpclientUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,9 +19,50 @@ public class AuthInteceptor implements HandlerInterceptor {
         HandlerMethod method = (HandlerMethod) o;
         LoginRequire loginRequire = method.getMethodAnnotation(LoginRequire.class);
         if(loginRequire==null){
+            //不登录可以访问
             return true;
         }
-        return false;
+        System.out.println("进入拦截器拦截功能");
+
+        //获取token 验证真伪
+        String token = "";
+        String oldToken = CookieUtil.getCookieValue(httpServletRequest, "oldToken", true);
+        if(StringUtils.isNotBlank(oldToken)){
+            token = oldToken;
+        }
+        String newToken = httpServletRequest.getParameter("token");
+        if(StringUtils.isNotBlank(newToken)){
+            token = newToken;
+        }
+        String success = "fail";
+
+        if(StringUtils.isNotBlank(token)){
+            success = HttpclientUtil.doGet("http://localhost:8085/verify?token="+token);
+        }
+
+        boolean loginSuccess = loginRequire.loginSuccess();
+        if(loginSuccess){
+            //必须登录才可以访问
+            if(!success.equals("success")){//验证token失败
+                //重定向到登陆页
+                StringBuffer requestURL = httpServletRequest.getRequestURL();
+                httpServletResponse.sendRedirect("http://localhost:8085/index?returnUrl="+requestURL);
+                return false;
+            }
+            //覆盖cookie中的token
+            httpServletRequest.setAttribute("memberId","1");
+            httpServletRequest.setAttribute("nickname","nickname");
+
+        }else{
+            //不是必须登录
+            if(success.equals("success")){
+                httpServletRequest.setAttribute("memberId","1");
+                httpServletRequest.setAttribute("nickname","nickname");
+            }
+        }
+        //覆盖cookie中的值
+        CookieUtil.setCookie(httpServletRequest,httpServletResponse,"oldToken",token,60*60*2,true);
+        return true;
     }
 
     @Override

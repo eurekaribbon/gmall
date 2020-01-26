@@ -2,6 +2,7 @@ package com.atguigu.gmall.cart.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.gmall.anotations.LoginRequire;
 import com.atguigu.gmall.bean.OmsCartItem;
 import com.atguigu.gmall.bean.PmsSkuInfo;
 import com.atguigu.gmall.service.CartService;
@@ -11,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,9 +38,11 @@ public class CartController {
      * @return
      */
     @RequestMapping("toTrade")
-    @ResponseBody
-    public String toTrade(){
-        return "结算页面";
+    @LoginRequire(loginSuccess = true)
+    public String toTrade(HttpServletRequest request){
+        String memberId = (String)request.getAttribute("memberId");
+        String nickname = (String)request.getAttribute("nickname");
+        return "tradList";
     }
 
 
@@ -53,6 +55,7 @@ public class CartController {
      * @return
      */
     @RequestMapping("checkCart")
+    @LoginRequire(loginSuccess = false)
     public String checkCart(HttpServletRequest request,String isChecked,String skuId,ModelMap map){
         List<OmsCartItem> omsCartItems = new java.util.ArrayList<>();
 
@@ -92,6 +95,7 @@ public class CartController {
     }
 
     @RequestMapping("cartList")
+    @LoginRequire(loginSuccess = false)
     public String cartList(HttpServletRequest request, ModelMap map){
         List<OmsCartItem> omsCartItems = new java.util.ArrayList<>();
         String memberId = "1";
@@ -119,6 +123,7 @@ public class CartController {
 
 
     @RequestMapping("addToCart")
+    @LoginRequire(loginSuccess = false)
     public String addToCart(String skuId, Integer quantity, HttpServletRequest request, HttpServletResponse response){
         //调用商品服务查询商品信息
         PmsSkuInfo pmsSkuInfo = skuService.getSkuInfoBySkuId(skuId);
