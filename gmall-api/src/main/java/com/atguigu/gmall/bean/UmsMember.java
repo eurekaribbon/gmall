@@ -21,11 +21,39 @@ public class UmsMember implements Serializable {
     private String        city;
     private String job;
     private String         personalizedSignature;
-    private int sourceType;
+    private String sourceType;//登录类型
     private int         integration;
     private int growth;
     private int         luckeyCount;
     private int historyIntegration;
+
+    private String accessToken;//令牌
+    private String code;//授权码
+    private String sourceUid;//登录id
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getSourceUid() {
+        return sourceUid;
+    }
+
+    public void setSourceUid(String sourceUid) {
+        this.sourceUid = sourceUid;
+    }
 
     public String getId() {
         return id;
@@ -139,11 +167,11 @@ public class UmsMember implements Serializable {
         this.personalizedSignature = personalizedSignature;
     }
 
-    public int getSourceType() {
+    public String getSourceType() {
         return sourceType;
     }
 
-    public void setSourceType(int sourceType) {
+    public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
     }
 

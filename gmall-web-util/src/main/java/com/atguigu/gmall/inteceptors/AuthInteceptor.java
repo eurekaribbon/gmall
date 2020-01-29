@@ -1,5 +1,6 @@
 package com.atguigu.gmall.inteceptors;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.anotations.LoginRequire;
 import com.atguigu.gmall.util.CookieUtil;
 import com.atguigu.gmall.util.HttpclientUtil;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Component
 public class AuthInteceptor implements HandlerInterceptor {
@@ -35,9 +37,16 @@ public class AuthInteceptor implements HandlerInterceptor {
             token = newToken;
         }
         String success = "fail";
-
+        Map<String,String> map = null;
         if(StringUtils.isNotBlank(token)){
-            success = HttpclientUtil.doGet("http://localhost:8085/verify?token="+token);
+            String ip = "";
+            ip = httpServletRequest.getHeader("x_forwarded_for");
+            if(StringUtils.isBlank(ip)){
+                ip = httpServletRequest.getRemoteAddr();
+            }
+            String successJson = HttpclientUtil.doGet("http://localhost:8085/verify?token="+token+"&currentIp="+ip);
+            map = JSON.parseObject(successJson, Map.class);
+            success = map.get("status");
         }
 
         boolean loginSuccess = loginRequire.loginSuccess();
@@ -50,18 +59,21 @@ public class AuthInteceptor implements HandlerInterceptor {
                 return false;
             }
             //覆盖cookie中的token
-            httpServletRequest.setAttribute("memberId","1");
-            httpServletRequest.setAttribute("nickname","nickname");
+            httpServletRequest.setAttribute("memberId",map.get("memberId"));
+            httpServletRequest.setAttribute("nickname",map.get("nickname"));
+            //覆盖cookie中的值
+            CookieUtil.setCookie(httpServletRequest,httpServletResponse,"oldToken",token,60*60*2,true);
 
         }else{
             //不是必须登录
             if(success.equals("success")){
-                httpServletRequest.setAttribute("memberId","1");
-                httpServletRequest.setAttribute("nickname","nickname");
+                httpServletRequest.setAttribute("memberId",map.get("memberId"));
+                httpServletRequest.setAttribute("nickname",map.get("nickname"));
+                //覆盖cookie中的值
+                CookieUtil.setCookie(httpServletRequest,httpServletResponse,"oldToken",token,60*60*2,true);
             }
         }
-        //覆盖cookie中的值
-        CookieUtil.setCookie(httpServletRequest,httpServletResponse,"oldToken",token,60*60*2,true);
+
         return true;
     }
 

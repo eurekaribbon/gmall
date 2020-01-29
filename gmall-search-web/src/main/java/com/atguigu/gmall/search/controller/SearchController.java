@@ -1,6 +1,7 @@
 package com.atguigu.gmall.search.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.atguigu.gmall.anotations.LoginRequire;
 import com.atguigu.gmall.bean.*;
 import com.atguigu.gmall.service.PmsBaseAttrService;
 import com.atguigu.gmall.service.SearchService;
@@ -28,6 +29,7 @@ public class SearchController {
     PmsBaseAttrService pmsBaseAttrService;
 
     @RequestMapping("index")
+    @LoginRequire(loginSuccess = false)
     public String index(){
         return "index";
     }
