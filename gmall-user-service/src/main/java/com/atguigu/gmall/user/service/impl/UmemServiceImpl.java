@@ -96,6 +96,13 @@ public class UmemServiceImpl implements UmemService {
         return umsMemberMapper.selectOne(umsMember1);
     }
 
+    @Override
+    public UmsMemberReceiveAddress getAddressById(String receiveAddressId) {
+        UmsMemberReceiveAddress address = new UmsMemberReceiveAddress();
+        address.setId(receiveAddressId);
+        return umsMemberReceiveAddressMapper.selectOne(address);
+    }
+
     private UmsMember loginFromDb(UmsMember umsMember) {
         UmsMember umsMember1 = umsMemberMapper.selectOne(umsMember);
         return umsMember1;

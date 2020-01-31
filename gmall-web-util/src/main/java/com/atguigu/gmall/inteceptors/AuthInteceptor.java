@@ -55,7 +55,7 @@ public class AuthInteceptor implements HandlerInterceptor {
             if(!success.equals("success")){//验证token失败
                 //重定向到登陆页
                 StringBuffer requestURL = httpServletRequest.getRequestURL();
-                httpServletResponse.sendRedirect("http://localhost:8085/index?returnUrl="+requestURL);
+                httpServletResponse.sendRedirect("http://passport.gmall.com:8085/index?returnUrl="+requestURL);
                 return false;
             }
             //覆盖cookie中的token

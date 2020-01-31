@@ -33,17 +33,7 @@ public class CartController {
     CartService cartService;
 
 
-    /**
-     * 模拟跳转到结算页面
-     * @return
-     */
-    @RequestMapping("toTrade")
-    @LoginRequire(loginSuccess = true)
-    public String toTrade(HttpServletRequest request){
-        String memberId = (String)request.getAttribute("memberId");
-        String nickname = (String)request.getAttribute("nickname");
-        return "tradList";
-    }
+
 
 
     /**

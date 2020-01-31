@@ -1,14 +1,19 @@
 package com.atguigu.gmall.bean;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class OmsOrder implements Serializable {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String    memberId;
     private String couponId;
@@ -22,10 +27,10 @@ public class OmsOrder implements Serializable {
     private BigDecimal integrationAmount;
     private BigDecimal        couponAmount;
     private BigDecimal discountAmount;
-    private int        payType;
-    private int sourceType;
-    private int        status;
-    private int orderType;
+    private BigDecimal        payType;
+    private BigDecimal sourceType;
+    private BigDecimal status;
+    private BigDecimal orderType;
     private String        deliveryCompany;
     private String deliverySn;
     private int         autoConfirmDay;
@@ -53,6 +58,17 @@ public class OmsOrder implements Serializable {
     private Date         receiveTime;
     private Date commentTime;
     private Date        modifyTime;
+
+    @Transient
+    private List<OmsOrderItem> omsOrderItems;
+
+    public List<OmsOrderItem> getOmsOrderItems() {
+        return omsOrderItems;
+    }
+
+    public void setOmsOrderItems(List<OmsOrderItem> omsOrderItems) {
+        this.omsOrderItems = omsOrderItems;
+    }
 
     public String getId() {
         return id;
@@ -158,35 +174,36 @@ public class OmsOrder implements Serializable {
         this.discountAmount = discountAmount;
     }
 
-    public int getPayType() {
+
+    public BigDecimal getPayType() {
         return payType;
     }
 
-    public void setPayType(int payType) {
+    public void setPayType(BigDecimal payType) {
         this.payType = payType;
     }
 
-    public int getSourceType() {
+    public BigDecimal getSourceType() {
         return sourceType;
     }
 
-    public void setSourceType(int sourceType) {
+    public void setSourceType(BigDecimal sourceType) {
         this.sourceType = sourceType;
     }
 
-    public int getStatus() {
+    public BigDecimal getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(BigDecimal status) {
         this.status = status;
     }
 
-    public int getOrderType() {
+    public BigDecimal getOrderType() {
         return orderType;
     }
 
-    public void setOrderType(int orderType) {
+    public void setOrderType(BigDecimal orderType) {
         this.orderType = orderType;
     }
 

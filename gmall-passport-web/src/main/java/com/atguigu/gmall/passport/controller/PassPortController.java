@@ -82,7 +82,7 @@ public class PassPortController {
         }
         //token生成
         Map<String,Object> map1 = new HashMap<>();
-        String memberId = umsMemberCheck.getId();//id未拿到
+        String memberId = umsMemberCheck.getId();//id未拿到  未主键返回策略   且rpc时需要主动返回对象-
         String nickname = umsMemberCheck.getNickname();
         map1.put("memberId",memberId);
         map1.put("nickname",nickname);

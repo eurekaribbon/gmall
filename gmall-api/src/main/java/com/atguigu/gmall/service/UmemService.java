@@ -18,4 +18,6 @@ public interface UmemService {
     UmsMember addOauthUser(UmsMember umsMember);
 
     UmsMember umsMembercheck(UmsMember umsMember1);
+
+    UmsMemberReceiveAddress getAddressById(String receiveAddressId);
 }
