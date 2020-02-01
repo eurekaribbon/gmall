@@ -13,6 +13,7 @@ import com.atguigu.gmall.service.UmemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -42,7 +43,7 @@ public class OrderController {
 
     @RequestMapping("submitOrder")
     @LoginRequire(loginSuccess = true)
-    public String submitOrder(String receiveAddressId,String tradeCode,HttpServletRequest request){
+    public ModelAndView submitOrder(String receiveAddressId,String tradeCode,HttpServletRequest request){
         String memberId = (String)request.getAttribute("memberId");
         String nickname = (String)request.getAttribute("nickname");
 
@@ -95,7 +96,7 @@ public class OrderController {
                         omsOrderItem.setProductId(omsCartItem.getProductId());
                         omsOrderItems.add(omsOrderItem);
                     }else{
-                        return "tradeFail";
+                        return new ModelAndView("tradeFail");
                     }
                 }
             }
@@ -104,11 +105,14 @@ public class OrderController {
             // 删除购物车中的数据
             orderService.save(omsOrder);
         //重定向到支付页面
+            ModelAndView modelAndView = new ModelAndView("redirect:http://payment.gmall.com:8087/index");
+            modelAndView.addObject("outTradeNo",outTradeNo);
+            modelAndView.addObject("totalAmount");
+            return  modelAndView;
 
         }else{
-            return "tradFail";
+            return new ModelAndView("tradeFail");
         }
-        return "12";
     }
 
     /**

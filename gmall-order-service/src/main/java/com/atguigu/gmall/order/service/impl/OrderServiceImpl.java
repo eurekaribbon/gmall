@@ -100,4 +100,11 @@ public class OrderServiceImpl implements OrderService {
             //cartService.delCart("根据购物车的主键删除");
         }
     }
+
+    @Override
+    public OmsOrder getOrderByOutTradeNo(String outTradeNo) {
+        OmsOrder omsOrder = new OmsOrder();
+        omsOrder.setOrderSn(outTradeNo);
+        return omsOrderMapper.selectOne(omsOrder);
+    }
 }
