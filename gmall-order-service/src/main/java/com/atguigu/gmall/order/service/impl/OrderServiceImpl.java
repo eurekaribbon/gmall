@@ -8,10 +8,15 @@ import com.atguigu.gmall.order.mapper.OmsOrderItemMapper;
 import com.atguigu.gmall.order.mapper.OmsOrderMapper;
 import com.atguigu.gmall.service.CartService;
 import com.atguigu.gmall.service.OrderService;
+import com.atguigu.gmall.util.ActiveMQUtil;
 import com.atguigu.gmall.util.RedisUtil;
+import org.apache.activemq.command.ActiveMQMapMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
+import tk.mybatis.mapper.entity.Example;
 
+import javax.jms.*;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +39,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Reference
     CartService cartService;
+
+    @Autowired
+    ActiveMQUtil activeMQUtil;
 
     /**
      * 校验交易码
@@ -106,5 +114,38 @@ public class OrderServiceImpl implements OrderService {
         OmsOrder omsOrder = new OmsOrder();
         omsOrder.setOrderSn(outTradeNo);
         return omsOrderMapper.selectOne(omsOrder);
+    }
+
+    @Override
+    public void updateStatus(String out_trade_no) {
+        Example example = new Example(OmsOrder.class);
+        example.createCriteria().andEqualTo("orderSn",out_trade_no);
+        OmsOrder omsOrder = new OmsOrder();
+        omsOrder.setStatus(new BigDecimal("1"));
+        omsOrderMapper.updateByExampleSelective(omsOrder,example);
+
+        //发送订单已支付
+        Connection connection = null;
+        Session session = null;
+        try{
+            connection = activeMQUtil.getConnectionFactory().createConnection();
+            session = connection.createSession(true, Session.SESSION_TRANSACTED);
+
+            Queue order_pay_quequ = session.createQueue("order_pay_quequ");
+            MessageProducer producer = session.createProducer(order_pay_quequ);
+
+            ActiveMQMapMessage activeMQMapMessage = new ActiveMQMapMessage();
+
+            producer.send(activeMQMapMessage);
+
+            session.commit();
+
+        }catch(Exception exception){
+            try {
+                session.rollback();
+            } catch (JMSException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

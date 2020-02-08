@@ -84,6 +84,12 @@ public class CartController {
         return bigDecimal;
     }
 
+    /**
+     *
+     * @param request
+     * @param map
+     * @return
+     */
     @RequestMapping("cartList")
     @LoginRequire(loginSuccess = false)
     public String cartList(HttpServletRequest request, ModelMap map){

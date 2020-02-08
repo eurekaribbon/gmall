@@ -14,4 +14,10 @@ public interface OrderService {
     void save(OmsOrder omsOrder);
 
     OmsOrder getOrderByOutTradeNo(String outTradeNo);
+
+    /**
+     * 支付成功后更新订单状态
+     * @param out_trade_no
+     */
+    void updateStatus(String out_trade_no);
 }

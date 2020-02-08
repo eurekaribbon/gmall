@@ -102,6 +102,10 @@ public class PaymentController {
         paymentInfo.setPaymentStatus("未支付");
         paymentInfo.setOrderSn(outTradeNo);
         paymentService.save(paymentInfo);
+
+        //发送延时检查对列信息
+        paymentService.sendDelayCheck(outTradeNo,5);
+
         //提交请求到支付宝
         return form;
     }
